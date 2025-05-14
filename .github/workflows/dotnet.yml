@@ -1,0 +1,36 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: cyberSecurity Awarenessbot  CI
+
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
+
+      - name: Restore NuGet packages
+        run: nuget restore "CyberSecurity Awarenessbot.sln"
+
+      - name: Check Code Formatting
+        run: dotnet format --verify-no-changes "CyberSecurity Awarenessbot.sln " || exit 1
+
+      - name: Build Project
+        run: msbuild "CyberSecurity Awarenessbot.sln" /p:Configuration=Release
